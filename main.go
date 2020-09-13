@@ -372,9 +372,7 @@ func main() {
    	     panic(token.Error())
    	}	
 
-	text := fmt.Sprintf("this is msg #%d!", i)
-	token := c.Publish("go-mqtt/sample", 0, false, text)
-	token.Wait()
+
 	//End mqtt
 	
 	_, strict := os.LookupEnv("COLLECT_STRICTIDM")
@@ -468,7 +466,15 @@ func main() {
 				continue
 			}
 		}
-
+		
+		//More mqtt
+		text := fmt.Sprintf("this is msg #%d!", i)
+		topic := logMsg.Message["ID"] + "/vol"
+		token := cmqtt.Publish(topic, 0, false, text)
+		token.Wait()
+		cmqtt.Disconnect()
+		//End More mqtt
+		
 		// Messages know how to add points to a batch.
 		msg.AddPoints(logMsg, bp)
 
