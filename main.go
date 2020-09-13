@@ -468,9 +468,12 @@ func main() {
 		}
 		
 		//More mqtt
-		text := fmt.Sprintf("this is msg #%d!", i)
+		//text := fmt.Sprintf("this is msg #%d!", i)
 		topic := logMsg.Message["ID"] + "/vol"
-		token := cmqtt.Publish(topic, 0, false, text)
+		log.Println(topic)
+		log.PrintLn(logMsg)
+		log.PrintLn(logMsg.Message["Consumption"])
+		token := cmqtt.Publish(topic, 0, false, logMsg.Message["Consumption"])
 		token.Wait()
 		cmqtt.Disconnect()
 		//End More mqtt
