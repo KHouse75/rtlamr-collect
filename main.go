@@ -269,7 +269,6 @@ func (r900 R900) AddPoints(msg LogMessage, bp client.BatchPoints) {
     	cmqtt := mqtt.NewClient(opts)
    	if token := cmqtt.Connect(); token.Wait() && token.Error() != nil {
    	     panic(token.Error())
-             log.Println("ERRor")
    	}	
 	topic := fmt.Sprintf(strconv.Itoa(int(r900.EndpointID)) + "/vol")
 	token := cmqtt.Publish(topic, 0, false, fmt.Sprintf(strconv.Itoa(int(r900.Consumption))))
