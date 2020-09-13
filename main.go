@@ -372,7 +372,7 @@ func main() {
 	opts.SetDefaultPublishHandler(f)
 	opts.SetPingTimeout(1 * time.Second)
 	
-    	cmqtt := MQTT.NewClient(opts)
+    	cmqtt := mqtt.NewClient(opts)
    	if token := cmqtt.Connect(); token.Wait() && token.Error() != nil {
    	     panic(token.Error())
    	}	
