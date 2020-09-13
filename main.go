@@ -354,6 +354,11 @@ func init() {
 	log.SetFlags(log.Lshortfile | log.Lmicroseconds)
 }
 
+var f mqtt.MessageHandler = func(client mqtt.Client, msg mqtt.Message) {
+	fmt.Printf("TOPIC: %s\n", msg.Topic())
+	fmt.Printf("MSG: %s\n", msg.Payload())
+}
+
 func main() {
 	// COLLECT_INFLUXDB_STRICTIDM limits which endpoint types may be decoded
 	// between IDM and NetIDM. In the wild, type 7 should be standard IDM and
