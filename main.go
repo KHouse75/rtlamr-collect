@@ -368,7 +368,7 @@ func main() {
 	opts.SetPingTimeout(1 * time.Second)
 	
     	cmqtt := MQTT.NewClient(opts)
-   	if token := cmqtt.Connect(); token.Wait() && token.Error() ! = nil {
+   	if token := cmqtt.Connect(); token.Wait() && token.Error() != nil {
    	     panic(token.Error())
    	}	
 
