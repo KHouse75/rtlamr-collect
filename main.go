@@ -265,6 +265,7 @@ func (r900 R900) AddPoints(msg LogMessage, bp client.BatchPoints) {
 	opts.SetKeepAlive(2 * time.Second)
 	opts.SetDefaultPublishHandler(f)
 	opts.SetPingTimeout(1 * time.Second)
+	opts.Retained(true)
 	
     	cmqtt := mqtt.NewClient(opts)
    	if token := cmqtt.Connect(); token.Wait() && token.Error() != nil {
