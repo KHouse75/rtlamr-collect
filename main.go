@@ -204,6 +204,14 @@ func (scm SCM) AddPoints(msg LogMessage, bp client.BatchPoints) {
 		return
 	}
 
+	//Start mqtt
+	if *mqtt_on == true {
+
+		MqttPub(int(scm.EndpointID), int64(scm.Consumption))
+
+	}
+	//End More mqtt
+
 	bp.AddPoint(pt)
 }
 
@@ -234,6 +242,14 @@ func (scmplus SCMPlus) AddPoints(msg LogMessage, bp client.BatchPoints) {
 		log.Println(errors.Wrap(err, "new point"))
 		return
 	}
+
+	//Start mqtt
+	if *mqtt_on == true {
+
+		MqttPub(int(scmplus.EndpointID), int64(scmplus.Consumption))
+
+	}
+	//End More mqtt
 
 	bp.AddPoint(pt)
 }
@@ -278,21 +294,7 @@ func (r900 R900) AddPoints(msg LogMessage, bp client.BatchPoints) {
 	//Start mqtt
 	if *mqtt_on == true {
 
-		/*opts := mqtt.NewClientOptions().AddBroker(*broker)
-		opts.SetKeepAlive(2 * time.Second)
-		opts.SetPingTimeout(1 * time.Second)
-		
-	    	cmqtt := mqtt.NewClient(opts)
-	   	if token := cmqtt.Connect(); token.Wait() && token.Error() != nil {
-	   	     panic(token.Error())
-	   	}	
-		topic := fmt.Sprintf(strconv.Itoa(int(r900.EndpointID)) + "/vol")
-		//token := cmqtt.Publish(topic, 0, true, fmt.Sprintf(strconv.Itoa(int(r900.Consumption))))
-		token := cmqtt.Publish(topic, byte(*qos), *retain, fmt.Sprintf(strconv.Itoa(int(r900.Consumption))))
-		token.Wait()
-		cmqtt.Disconnect(250)*/
-
-		MqttPub(int(r900.EndpointID), int(r900.Consumption))
+		MqttPub(int(r900.EndpointID), int64(r900.Consumption))
 
 	}
 	//End More mqtt
@@ -300,7 +302,7 @@ func (r900 R900) AddPoints(msg LogMessage, bp client.BatchPoints) {
 	bp.AddPoint(pt)
 }
 
-func MqttPub (endpoint_id int, consumption int) {
+func MqttPub (endpoint_id int, consumption int64) {
 
 	opts := mqtt.NewClientOptions().AddBroker(*broker)
 	opts.SetKeepAlive(2 * time.Second)
@@ -311,7 +313,8 @@ func MqttPub (endpoint_id int, consumption int) {
    	     panic(token.Error())
    	}	
 	topic := fmt.Sprintf(strconv.Itoa(endpoint_id) + "/vol")
-	token := cmqtt.Publish(topic, byte(*qos), *retain, fmt.Sprintf(strconv.Itoa(consumption)))
+	//token := cmqtt.Publish(topic, byte(*qos), *retain, fmt.Sprintf(strconv.Itoa(consumption)))
+	token := cmqtt.Publish(topic, byte(*qos), *retain, fmt.Sprintf(strconv.FormatInt(consumption, 10)))
 	token.Wait()
 	cmqtt.Disconnect(250)
 
