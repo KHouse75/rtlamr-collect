@@ -37,7 +37,12 @@ import (
 	"github.com/pkg/errors"
 )
 
-var mqtt_on = flag.Bool("mqtt", false, "Turn on mqtt publish (default false)")
+var mqtt_on	= flag.Bool("mqtt", false, "Turn on mqtt publish (default false)")
+var broker	= flag.String("broker", "tcp://172.16.6.2:1883", "The broker URI. ex: tcp://10.10.1.1:1883")
+var password	= flag.String("password", "", "The password (optional)")
+var user	= flag.String("user", "", "The user (optional)")
+var qos		= flag.Int("qos", 0, "The Quality of Service 0,1,2 (default 0)")
+var retain	= flag.Bool("retain", false, "Set mqtt retain flag (default false)")
 
 const (
 	measurement = "rtlamr"
