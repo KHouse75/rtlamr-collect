@@ -433,9 +433,6 @@ func main() {
 			continue
 		}
 
-		log.Println(logMsg)
-
-
 		// Store the appropriate message type in msg based on logMsg.Type.
 		var msg Message
 		switch logMsg.Type {
