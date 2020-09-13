@@ -37,6 +37,8 @@ import (
 	"github.com/pkg/errors"
 )
 
+var mqtt_on = flag.Bool("mqtt", false, "Turn on mqtt publish (default false)")
+
 const (
 	measurement = "rtlamr"
 	threshold   = 30 * time.Second
@@ -390,7 +392,7 @@ func main() {
 	// checksum, so they are picked up by both decoders, but have different
 	// internal field layout.
 	
-	mqtt_on := flag.Bool("mqtt", false, "Turn on mqtt publish (default false)")
+	//mqtt_on := flag.Bool("mqtt", false, "Turn on mqtt publish (default false)")
 	flag.Parse()
 	
 	_, strict := os.LookupEnv("COLLECT_STRICTIDM")
