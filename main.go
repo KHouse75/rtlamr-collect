@@ -366,20 +366,7 @@ func main() {
 	// checksum, so they are picked up by both decoders, but have different
 	// internal field layout.
 	
-	//Start mqtt
-	opts := mqtt.NewClientOptions().AddBroker("tcp://172.16.6.2:1883")
-	opts.SetKeepAlive(2 * time.Second)
-	opts.SetDefaultPublishHandler(f)
-	opts.SetPingTimeout(1 * time.Second)
-	
-    	cmqtt := mqtt.NewClient(opts)
-   	if token := cmqtt.Connect(); token.Wait() && token.Error() != nil {
-   	     panic(token.Error())
-   	}	
 
-
-	//End mqtt
-	
 	_, strict := os.LookupEnv("COLLECT_STRICTIDM")
 	_, dryRun := os.LookupEnv("COLLECT_INFLUXDB_DRYRUN")
 
@@ -471,17 +458,6 @@ func main() {
 				continue
 			}
 		}
-		
-		//More mqtt
-		//text := fmt.Sprintf("this is msg #%d!", i)
-		topic := logMsg.Message["ID"] + "/vol"
-		log.Println(topic)
-		log.PrintLn(logMsg)
-		log.PrintLn(logMsg.Message["Consumption"])
-		token := cmqtt.Publish(topic, 0, false, logMsg.Message["Consumption"])
-		token.Wait()
-		cmqtt.Disconnect()
-		//End More mqtt
 		
 		// Messages know how to add points to a batch.
 		msg.AddPoints(logMsg, bp)
