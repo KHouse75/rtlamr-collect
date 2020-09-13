@@ -272,16 +272,15 @@ func (r900 R900) AddPoints(msg LogMessage, bp client.BatchPoints) {
 	//Start mqtt
 	opts := mqtt.NewClientOptions().AddBroker("tcp://172.16.6.2:1883")
 	opts.SetKeepAlive(2 * time.Second)
-	opts.SetDefaultPublishHandler(f)
+	//opts.SetDefaultPublishHandler(f)
 	opts.SetPingTimeout(1 * time.Second)
-	opts.Retained(true)
 	
     	cmqtt := mqtt.NewClient(opts)
    	if token := cmqtt.Connect(); token.Wait() && token.Error() != nil {
    	     panic(token.Error())
    	}	
 	topic := fmt.Sprintf(strconv.Itoa(int(r900.EndpointID)) + "/vol")
-	token := cmqtt.Publish(topic, 0, false, fmt.Sprintf(strconv.Itoa(int(r900.Consumption))))
+	token := cmqtt.Publish(topic, 0, true, fmt.Sprintf(strconv.Itoa(int(r900.Consumption))))
 	token.Wait()
 	cmqtt.Disconnect(250)
 	//End More mqtt
@@ -380,10 +379,10 @@ func init() {
 	log.SetFlags(log.Lshortfile | log.Lmicroseconds)
 }
 
-var f mqtt.MessageHandler = func(client mqtt.Client, msg mqtt.Message) {
+/*var f mqtt.MessageHandler = func(client mqtt.Client, msg mqtt.Message) {
 	fmt.Printf("TOPIC: %s\n", msg.Topic())
 	fmt.Printf("MSG: %s\n", msg.Payload())
-}
+}*/
 
 func main() {
 	// COLLECT_INFLUXDB_STRICTIDM limits which endpoint types may be decoded
