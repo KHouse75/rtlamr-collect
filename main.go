@@ -270,19 +270,21 @@ func (r900 R900) AddPoints(msg LogMessage, bp client.BatchPoints) {
 	}
 
 	//Start mqtt
-	opts := mqtt.NewClientOptions().AddBroker("tcp://172.16.6.2:1883")
-	opts.SetKeepAlive(2 * time.Second)
-	//opts.SetDefaultPublishHandler(f)
-	opts.SetPingTimeout(1 * time.Second)
-	
-    	cmqtt := mqtt.NewClient(opts)
-   	if token := cmqtt.Connect(); token.Wait() && token.Error() != nil {
-   	     panic(token.Error())
-   	}	
-	topic := fmt.Sprintf(strconv.Itoa(int(r900.EndpointID)) + "/vol")
-	token := cmqtt.Publish(topic, 0, true, fmt.Sprintf(strconv.Itoa(int(r900.Consumption))))
-	token.Wait()
-	cmqtt.Disconnect(250)
+	if *mqtt_on == true {
+
+		opts := mqtt.NewClientOptions().AddBroker("tcp://172.16.6.2:1883")
+		opts.SetKeepAlive(2 * time.Second)
+		opts.SetPingTimeout(1 * time.Second)
+		
+	    	cmqtt := mqtt.NewClient(opts)
+	   	if token := cmqtt.Connect(); token.Wait() && token.Error() != nil {
+	   	     panic(token.Error())
+	   	}	
+		topic := fmt.Sprintf(strconv.Itoa(int(r900.EndpointID)) + "/vol")
+		token := cmqtt.Publish(topic, 0, true, fmt.Sprintf(strconv.Itoa(int(r900.Consumption))))
+		token.Wait()
+		cmqtt.Disconnect(250)
+	}
 	//End More mqtt
 
 	bp.AddPoint(pt)
