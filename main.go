@@ -44,6 +44,7 @@ var user	= flag.String("user", "", "The user (optional)")
 var qos		= flag.Int("qos", 0, "The Quality of Service 0,1,2 (default 0)")
 var retain	= flag.Bool("retain", false, "Set mqtt retain flag (default false)")
 
+
 const (
 	measurement = "rtlamr"
 	threshold   = 30 * time.Second
@@ -277,7 +278,7 @@ func (r900 R900) AddPoints(msg LogMessage, bp client.BatchPoints) {
 	//Start mqtt
 	if *mqtt_on == true {
 
-		opts := mqtt.NewClientOptions().AddBroker("tcp://172.16.6.2:1883")
+		/*opts := mqtt.NewClientOptions().AddBroker(*broker)
 		opts.SetKeepAlive(2 * time.Second)
 		opts.SetPingTimeout(1 * time.Second)
 		
@@ -286,13 +287,34 @@ func (r900 R900) AddPoints(msg LogMessage, bp client.BatchPoints) {
 	   	     panic(token.Error())
 	   	}	
 		topic := fmt.Sprintf(strconv.Itoa(int(r900.EndpointID)) + "/vol")
-		token := cmqtt.Publish(topic, 0, true, fmt.Sprintf(strconv.Itoa(int(r900.Consumption))))
+		//token := cmqtt.Publish(topic, 0, true, fmt.Sprintf(strconv.Itoa(int(r900.Consumption))))
+		token := cmqtt.Publish(topic, byte(*qos), *retain, fmt.Sprintf(strconv.Itoa(int(r900.Consumption))))
 		token.Wait()
-		cmqtt.Disconnect(250)
+		cmqtt.Disconnect(250)*/
+
+		MqttPub(int(r900.EndpointID), int(r900.Consumption))
+
 	}
 	//End More mqtt
 
 	bp.AddPoint(pt)
+}
+
+func MqttPub (endpoint_id int, consumption int) {
+
+	opts := mqtt.NewClientOptions().AddBroker(*broker)
+	opts.SetKeepAlive(2 * time.Second)
+	opts.SetPingTimeout(1 * time.Second)
+	
+    	cmqtt := mqtt.NewClient(opts)
+   	if token := cmqtt.Connect(); token.Wait() && token.Error() != nil {
+   	     panic(token.Error())
+   	}	
+	topic := fmt.Sprintf(strconv.Itoa(endpoint_id) + "/vol")
+	token := cmqtt.Publish(topic, byte(*qos), *retain, fmt.Sprintf(strconv.Itoa(consumption)))
+	token.Wait()
+	cmqtt.Disconnect(250)
+
 }
 
 // Message knows how to add points to a batch of points.
