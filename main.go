@@ -13,6 +13,12 @@
 //
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+/*
+Options:
+ [-help]                      	Display help
+ [-mqtt]			Turn on mqtt
+*/
 package main
 
 import (
@@ -383,7 +389,8 @@ func main() {
 	// checksum, so they are picked up by both decoders, but have different
 	// internal field layout.
 	
-
+	mqtt_on := flag.Bool("mqtt", false, "Turn on mqtt publish (default false)")
+	flag.Parse()
 	
 	_, strict := os.LookupEnv("COLLECT_STRICTIDM")
 	_, dryRun := os.LookupEnv("COLLECT_INFLUXDB_DRYRUN")
