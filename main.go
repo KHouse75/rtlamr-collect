@@ -26,7 +26,7 @@ import (
 	"time"
 
 	client "github.com/influxdata/influxdb1-client/v2"
-	"github.com/eclipse/paho.mqtt.golang"
+	mqtt "github.com/eclipse/paho.mqtt.golang"
 	"github.com/pkg/errors"
 )
 
